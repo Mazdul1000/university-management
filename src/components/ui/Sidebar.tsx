@@ -10,6 +10,8 @@ import {
   } from '@ant-design/icons';
 import {  Layout, Menu } from 'antd';
 import type { MenuProps } from 'antd';
+import { sidebarItems } from '@/constants/sidebarItems';
+import { USER_ROLE } from '@/constants/role';
 const { Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -42,6 +44,9 @@ function getItem(
 
 const Sidebar = () => {
     const [collapsed, setCollapsed] = useState(false);
+
+    // user role
+    const role = USER_ROLE.STUDENT;
     return (
         <Sider 
         collapsible 
@@ -67,7 +72,7 @@ const Sidebar = () => {
        }}>
         PH-University
        </div>
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
+        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={sidebarItems(role)} />
       </Sider>
     );
 };
