@@ -8,7 +8,9 @@ import Form from "@/components/Forms/Form";
 import { SubmitHandler } from "react-hook-form";
 import FormInput from "@/components/Forms/FormInput";
 import { useUserLoginMutation } from "@/redux/api/authApi";
-import { storeUserInfo } from "@/services/auth.service";
+import { getUserInfo, isLoggedIn, storeUserInfo } from "@/services/auth.service";
+import { useRouter } from "next/navigation";
+import Loading from "../loading";
 
 type FormValues = {
   id: string;
@@ -16,17 +18,32 @@ type FormValues = {
 };
 
 const LoginPage = () => {
-
-    const [userLogin] = useUserLoginMutation();
-
+    const isUserLoggedIn = isLoggedIn()
+    const [userLogin, {isLoading}] = useUserLoginMutation();
+    const router = useRouter();
   const onsubmit: SubmitHandler<FormValues> = async(data:any) => {
     try {
       const res = await userLogin({...data}).unwrap()
+      if(res?.data?.accessToken){ 
+        router.push('/profile')
+      }
+
       storeUserInfo({accessToken: res?.data?.accessToken})
+      
     } catch (err:any) {
         console.error(err.message);
     }
   };
+  if(isLoading){
+    return <Loading />
+  }
+
+  if(isUserLoggedIn){
+    router.push('/profile');
+  }
+
+
+
   return (
     <Row
       justify="center"
