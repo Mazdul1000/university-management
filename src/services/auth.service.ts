@@ -14,7 +14,7 @@ export const getUserInfo = () => {
         const decodedData = decodedToken(authToken)
         return decodedData as IUserInfo;
     }else{
-        return "";
+        return {} as IUserInfo;
     }
 }
 
