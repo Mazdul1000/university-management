@@ -1,80 +1,91 @@
-"use client"
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 import {
-    DesktopOutlined,
-    FileOutlined,
-    PieChartOutlined,
-    TeamOutlined,
-    UserOutlined,
-  } from '@ant-design/icons';
-import {  Layout, Menu } from 'antd';
-import type { MenuProps } from 'antd';
-import { sidebarItems } from '@/constants/sidebarItems';
-import { USER_ROLE } from '@/constants/role';
+  DesktopOutlined,
+  FileOutlined,
+  PieChartOutlined,
+  TeamOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { Layout, Menu } from "antd";
+import type { MenuProps } from "antd";
+import { sidebarItems } from "@/constants/sidebarItems";
+import { USER_ROLE } from "@/constants/role";
+import { getUserInfo } from "@/services/auth.service";
 const { Sider } = Layout;
 
-type MenuItem = Required<MenuProps>['items'][number];
+type MenuItem = Required<MenuProps>["items"][number];
 
 function getItem(
-    label: React.ReactNode,
-    key: React.Key,
-    icon?: React.ReactNode,
-    children?: MenuItem[],
-  ): MenuItem {
-    return {
-      key,
-      icon,
-      children,
-      label,
-    } as MenuItem;
-  }
-  
-  const items: MenuItem[] = [
-    getItem('Option 1', '1', <PieChartOutlined />),
-    getItem('Option 2', '2', <DesktopOutlined />),
-    getItem('User', 'sub1', <UserOutlined />, [
-      getItem('Tom', '3'),
-      getItem('Bill', '4'),
-      getItem('Alex', '5'),
-    ]),
-    getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-    getItem('Files', '9', <FileOutlined />),
-  ];
+  label: React.ReactNode,
+  key: React.Key,
+  icon?: React.ReactNode,
+  children?: MenuItem[]
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+  } as MenuItem;
+}
+
+const items: MenuItem[] = [
+  getItem("Option 1", "1", <PieChartOutlined />),
+  getItem("Option 2", "2", <DesktopOutlined />),
+  getItem("User", "sub1", <UserOutlined />, [
+    getItem("Tom", "3"),
+    getItem("Bill", "4"),
+    getItem("Alex", "5"),
+  ]),
+  getItem("Team", "sub2", <TeamOutlined />, [
+    getItem("Team 1", "6"),
+    getItem("Team 2", "8"),
+  ]),
+  getItem("Files", "9", <FileOutlined />),
+];
 
 const Sidebar = () => {
-    const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
-    // user role
-    const role = USER_ROLE.STUDENT;
-    return (
-        <Sider 
-        collapsible 
-        collapsed={collapsed} 
-        onCollapse={(value) => setCollapsed(value)}
-        width={280}
+  // user role
+  const { role } = getUserInfo();
+ 
+  return (
+    <Sider
+      collapsible
+      collapsed={collapsed}
+      onCollapse={(value) => setCollapsed(value)}
+      width={280}
+      style={{
+        overflow: "auto",
+        height: "100vh",
+        position: "sticky",
+        left: 0,
+        bottom: 0,
+        top: 0,
+      }}
+    >
+      <div
         style={{
-            overflow: 'auto',
-            height: '100vh',
-            position: 'sticky',
-            left: 0,
-            bottom: 0,
-            top: 0,
+          color: "white",
+          fontSize: "2rem",
+          fontWeight: "bold",
+          textAlign: "center",
+          marginBottom: "1rem",
         }}
-        >
-       <div style={{
-        color: 'white',
-        fontSize: '2rem',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: '1rem'
-
-       }}>
+      >
         PH-University
-       </div>
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={sidebarItems(role)} />
-      </Sider>
-    );
+      </div>
+      <Menu
+        theme="dark"
+        defaultSelectedKeys={["1"]}
+        mode="inline"
+        items={sidebarItems(role)}
+      />
+    </Sider>
+  );
 };
 
 export default Sidebar;

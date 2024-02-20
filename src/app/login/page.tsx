@@ -8,7 +8,11 @@ import Form from "@/components/Forms/Form";
 import { SubmitHandler } from "react-hook-form";
 import FormInput from "@/components/Forms/FormInput";
 import { useUserLoginMutation } from "@/redux/api/authApi";
-import { getUserInfo, isLoggedIn, storeUserInfo } from "@/services/auth.service";
+import {
+  getUserInfo,
+  isLoggedIn,
+  storeUserInfo,
+} from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 import Loading from "../loading";
 
@@ -18,31 +22,29 @@ type FormValues = {
 };
 
 const LoginPage = () => {
-    const isUserLoggedIn = isLoggedIn()
-    const [userLogin, {isLoading}] = useUserLoginMutation();
-    const router = useRouter();
-  const onsubmit: SubmitHandler<FormValues> = async(data:any) => {
-    try {
-      const res = await userLogin({...data}).unwrap()
-      if(res?.data?.accessToken){ 
-        router.push('/profile')
-      }
+  const isUserLoggedIn = isLoggedIn();
+  const [userLogin, { isLoading }] = useUserLoginMutation();
+  const router = useRouter();
 
-      storeUserInfo({accessToken: res?.data?.accessToken})
-      
-    } catch (err:any) {
-        console.error(err.message);
+  const onsubmit: SubmitHandler<FormValues> = async (data: any) => {
+    try {
+      const res = await userLogin({ ...data }).unwrap();
+
+      if (res?.accessToken) {
+        storeUserInfo({ accessToken: res?.accessToken });
+        router.push("/profile");
+      }
+    } catch (err: any) {
+      console.log(err);
     }
   };
-  if(isLoading){
-    return <Loading />
+  if (isLoading) {
+    return <Loading />;
   }
 
-  if(isUserLoggedIn){
-    router.push('/profile');
+  if (isUserLoggedIn) {
+    router.push("/profile");
   }
-
-
 
   return (
     <Row
